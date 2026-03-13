@@ -1,20 +1,20 @@
-from .ingestion import Document
-from .extraction import extract_income_fields
-from .validation import load_rules, validate_income_fields
-from .summarization import generate_underwriter_summary
+from .ingestion import load_text_document
+from .extraction import extract_fields
+from .validation import validate_extracted_fields
+from .summarization import summarize_mortgage_profile
 
-def process_income_document(doc: Document) -> dict:
-    """
-    Runs the full mortgage income document pipeline:
-    extraction -> validation -> summarization.
-    """
-    rules = load_rules()
-    fields = extract_income_fields(doc)
-    validation = validate_income_fields(fields, rules)
-    summary = generate_underwriter_summary(fields, validation)
 
-    return {
-        "fields": fields,
-        "validation": validation,
-        "summary": summary,
-    }
+def run_pipeline(path: str):
+    # 1) Load
+    doc = load_text_document(path)
+
+    # 2) Extract (Claude)
+    fields = extract_fields(doc.text)
+
+    # 3) Validate
+    issues = validate_extracted_fields(fields)
+
+    # 4) Summarize
+    summary = summarize_mortgage_profile(fields, issues)
+
+    return fields, issues, summary

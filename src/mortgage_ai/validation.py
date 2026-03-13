@@ -1,37 +1,49 @@
-import yaml
-import os
+from typing import Dict, List, Any
 
-# Path to the underwriting rules file
-RULES_PATH = os.path.join(os.path.dirname(__file__), "rules", "underwriting_rules.yaml")
 
-def load_rules(path: str = RULES_PATH) -> dict:
+def validate_extracted_fields(fields: Dict[str, Any]) -> List[str]:
     """
-    Loads underwriting rules from a YAML file.
+    Validates extracted mortgage fields from Claude or regex extraction.
+    Handles mixed types (string, float, int, None).
+    Returns a list of validation issues.
     """
-    with open(path, "r", encoding="utf-8") as f:
-        return yaml.safe_load(f)
 
-def validate_income_fields(fields: dict, rules: dict) -> dict:
-    """
-    Applies underwriting rules to extracted income fields.
-    Computes DTI and flags issues like high DTI or low income.
-    """
-    results = {"flags": [], "computed": {}}
+    issues: List[str] = []
 
-    income = fields.get("income")
-    monthly_debt = fields.get("monthly_debt")
+    # Required fields for a basic W-2 profile
+    required_fields = ["employee_name", "employer", "wages", "tax_year"]
 
-    # Compute DTI if both values exist
-    if income and monthly_debt:
-        annual_debt = monthly_debt * 12
-        dti = annual_debt / income
-        results["computed"]["dti"] = dti
+    for key in required_fields:
+        if key not in fields or fields[key] in (None, "", []):
+            issues.append(f"Missing required field: {key}")
 
-        if dti > rules["dti_max"]:
-            results["flags"].append("high_dti")
+    # Validate wages
+    wages_raw = fields.get("wages")
+    wages_val = None
 
-    # Check minimum income guideline
-    if income and income < rules["min_income"]:
-        results["flags"].append("low_income")
+    if wages_raw is not None:
+        try:
+            # If Claude returned a number
+            if isinstance(wages_raw, (int, float)):
+                wages_val = float(wages_raw)
+            else:
+                # If Claude returned a string
+                wages_str = str(wages_raw).replace(",", "").replace("$", "")
+                wages_val = float(wages_str)
+        except Exception:
+            issues.append("Wages is not a valid number.")
 
-    return results
+        if wages_val is not None and wages_val <= 0:
+            issues.append("Wages must be a positive value.")
+
+    # Validate tax year
+    tax_year_raw = fields.get("tax_year")
+    if tax_year_raw is not None:
+        try:
+            tax_year_val = int(str(tax_year_raw).strip())
+            if tax_year_val < 1900 or tax_year_val > 2100:
+                issues.append("Tax year appears invalid.")
+        except Exception:
+            issues.append("Tax year is not a valid integer.")
+
+    return issues

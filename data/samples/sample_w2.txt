@@ -1,0 +1,4 @@
+Employee Name: John Doe
+Employer: ACME Corp
+Wages: $85,000.00
+Tax Year: 2024

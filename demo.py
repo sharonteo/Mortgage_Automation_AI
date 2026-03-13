@@ -1,19 +1,15 @@
-from src.mortgage_ai.ingestion import load_text_document
-from src.mortgage_ai.pipeline import process_income_document
+from src.mortgage_ai.pipeline import run_pipeline
 
 if __name__ == "__main__":
-    # Load the sample W-2 style document
-    doc = load_text_document("data/samples/sample_w2.txt")
+    fields, validation, summary = run_pipeline("data/samples/sample_w2.txt")
 
-    # Run the full pipeline
-    result = process_income_document(doc)
+    print("\n=== EXTRACTED FIELDS ===")
+    for k, v in fields.items():
+        print(f"{k}: {v}")
 
-    # Print results
-    print("=== Extracted Fields ===")
-    print(result["fields"])
+    print("\n=== VALIDATION ===")
+    for issue in validation:
+        print(f"- {issue}")
 
-    print("\n=== Validation Results ===")
-    print(result["validation"])
-
-    print("\n=== Underwriter Summary ===")
-    print(result["summary"])
+    print("\n=== SUMMARY ===")
+    print(summary)

@@ -1,30 +1,30 @@
-def generate_underwriter_summary(fields: dict, validation: dict) -> str:
+from typing import Dict, List
+from anthropic import Anthropic
+import os
+
+def summarize_mortgage_profile(fields: Dict[str, str], issues: List[str]) -> str:
     """
-    Generates a concise underwriter-style summary based on extracted fields
-    and validation results.
+    Ask Claude for a concise underwriter-style summary.
     """
-    name = fields.get("borrower_name", "Unknown borrower")
-    income = fields.get("income")
-    employer = fields.get("employer")
-    dti = validation.get("computed", {}).get("dti")
-    flags = validation.get("flags", [])
+    client = Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
 
-    lines = []
-    lines.append(f"Borrower: {name}")
-    lines.append(f"Employer: {employer}")
-    lines.append(f"Reported annual income: {income}")
+    prompt = f"""
+You are an underwriter assistant. Given extracted W-2 style fields and validation issues,
+produce a concise, professional summary of the borrower's income profile.
 
-    if dti is not None:
-        lines.append(f"Estimated DTI: {dti:.2f}")
+Extracted fields:
+{fields}
 
-    if flags:
-        lines.append("Flags:")
-        for f in flags:
-            if f == "high_dti":
-                lines.append("- DTI exceeds guideline threshold.")
-            if f == "low_income":
-                lines.append("- Income below minimum guideline.")
-    else:
-        lines.append("No guideline issues detected based on available fields.")
+Validation issues:
+{issues}
 
-    return "\n".join(lines)
+Write 1–2 short paragraphs, plain text only.
+"""
+
+    resp = client.messages.create(
+        model="claude-sonnet-4-6",
+        max_tokens=300,
+        messages=[{"role": "user", "content": prompt}],
+    )
+
+    return resp.content[0].text

@@ -1,61 +1,91 @@
-# Mortgage_Automation_AI
+# Mortgage Automation AI  
+Lightweight Claude‑powered pipeline for extracting and summarizing mortgage income documents.
 
-Intelligent Document Processing, Classification, and Workflow Automation for Mortgage Operations
+This project demonstrates a clean, modular AI workflow for processing mortgage‑related documents. It ingests raw text, extracts key income fields using Claude, validates them, and produces a concise underwriter‑style summary. The design focuses on clarity, maintainability, and real‑world applicability for lending operations.
 
-This project demonstrates how applied AI, LLM-based automation, and multi-agent workflows can streamline key steps in the mortgage process. It simulates a LoanDepot-style system that ingests borrower documents, classifies them, extracts structured information, validates it against underwriting rules, and generates an underwriter-ready summary. The goal is to show how modern AI can reduce manual review, improve accuracy, and accelerate the mortgage experience for both customers and operations teams.
+## Pipeline Overview
 
----
+┌────────────┐     ┌────────────────────┐     ┌──────────────────┐     ┌──────────────────────┐
+│ Ingestion  │ --> │ Claude Extraction  │ --> │ Validation        │ --> │ Underwriter Summary  │
+└────────────┘     └────────────────────┘     └──────────────────┘     └──────────────────────┘
 
-## What this project solves
+- Ingestion loads a text document and normalizes it into a Document object.
+- Claude Extraction returns structured JSON fields such as employee name, employer, wages, and tax year.
+- Validation checks for missing or invalid values and ensures numeric fields are well‑formed.
+- Summary Generation uses Claude to produce a clear, professional narrative suitable for underwriting review.
 
-Mortgage operations rely on manual review of income documents — a slow, error-prone process that delays underwriting decisions. This project shows how AI-assisted automation can:
+## Project Structure
 
-- extract key borrower fields
-- apply underwriting rules (DTI, minimum income)
-- generate an underwriter-style summary
-- produce consistent, auditable results
+Mortgage_Automation_AI/
+│
+├── demo.py
+│
+├── data/
+│   └── samples/
+│       └── sample_w2.txt
+│
+└── src/
+    └── mortgage_ai/
+        ├── __init__.py
+        ├── ingestion.py
+        ├── extraction.py
+        ├── validation.py
+        ├── summarization.py
+        └── pipeline.py
 
----
-
-## System architecture
-
-The pipeline mirrors a real mortgage workflow:
-
-Ingestion -> Extraction -> Validation -> Underwriter Summary
-
-### Components
-
-- Ingestion — loads raw text documents into a structured Document object
-- Extraction — simulates AI/LLM extraction using regex to pull borrower name, employer, income, and debt
-- Validation — applies underwriting rules (DTI, minimum income) from YAML config
-- Summarization — generates a concise, human-readable underwriter summary
-- Pipeline — orchestrates the full workflow
-- Demo script — runs the pipeline on a sample W-2
-
----
-
-## Folder structure
-
-Mortgage_Automation_AI/ | +-- data/ |   +-- samples/ |       +-- sample_w2.txt | +-- src/ |   +-- mortgage_ai/ |       +-- ingestion.py |       +-- extraction.py |       +-- validation.py |       +-- summarization.py |       +-- pipeline.py |       +-- rules/ |           +-- underwriting_rules.yaml | +-- demo.py
-
-
----
-
-## How to run the demo
+## Installation
 
 Install dependencies:
 
-pip install pyyaml
+python -m pip install anthropic
 
+Set your Anthropic API key:
 
-Run the pipeline:
+setx ANTHROPIC_API_KEY "sk-ant-xxxxxxxx"
+
+(After setting the key, close and reopen your terminal.)
+
+## Running the Demo
+
+Run the end‑to‑end pipeline:
 
 python demo.py
 
+Expected output includes:
 
-Expected output:
+- Extracted fields returned by Claude
+- Validation messages
+- A generated underwriter summary
 
-=== Extracted Fields === {'borrower_name': 'John Doe', 'employer': 'Acme Corporation', 'income': 85000.0, 'monthly_debt': 2500.0}
-=== Validation Results === {'flags': ['high_dti'], 'computed': {'dti': 0.35}}
-=== Underwriter Summary === Borrower: John Doe Employer: Acme Corporation Reported annual income: 85000.0 Estimated DTI: 0.35 Flags:
-- DTI exceeds guideline threshold.
+## Sample Input File
+
+data/samples/sample_w2.txt
+
+Employee Name: John Doe
+Employer: ACME Corp
+Wages: $85,000.00
+Tax Year: 2024
+
+## How It Works
+
+### Ingestion
+Loads a text file and wraps it in a Document object with a `.text` attribute used throughout the pipeline.
+
+### Claude Extraction
+Uses the Claude model to extract structured JSON fields. Missing fields are returned as null.
+
+### Validation
+Checks for required fields and ensures numeric values (such as wages) are valid and positive.
+
+### Summary Generation
+Sends extracted fields and validation issues to Claude to produce a concise, professional summary suitable for underwriting review.
+
+## Why This Project Matters
+
+Mortgage teams spend significant time manually reviewing income documents. This pipeline shows how AI can automate the first pass by:
+
+- Extracting structured data
+- Identifying missing or inconsistent values
+- Generating a clear summary for underwriting
+
+The architecture demonstrates practical AI engineering skills: modular design, LLM integration, error‑tolerant validation, and clean orchestration.

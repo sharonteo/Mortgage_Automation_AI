@@ -7,8 +7,6 @@ This project demonstrates a clean, modular AI workflow for processing mortgage�
 
 ## Pipeline Overview
 
-## Pipeline Overview
-
 ```
 ┌────────────┐     ┌────────────────────┐     ┌──────────────────┐     ┌────────────────────────┐
 │ Ingestion  │ --> │ Claude Extraction  │ --> │ Validation        │ --> │ Underwriter Summary    │
@@ -23,7 +21,7 @@ This project demonstrates a clean, modular AI workflow for processing mortgage�
 ---
 
 ## Project Structure
-
+```
 Mortgage_Automation_AI/
 │
 ├── demo.py
@@ -40,8 +38,7 @@ Mortgage_Automation_AI/
         ├── validation.py
         ├── summarization.py
         └── pipeline.py
-
----
+```
 
 ## Installation
 

@@ -1,0 +1,14 @@
+Account Holder: John Doe
+Account Number: ****4321
+Statement Period: 01/01/2024 - 01/31/2024
+Beginning Balance: 5,200.00
+
+Transactions:
+01/03/2024 | PAYROLL DEPOSIT | +3,038.70
+01/05/2024 | RENT PAYMENT | -1,850.00
+01/10/2024 | GROCERY STORE | -142.55
+01/15/2024 | UTILITIES | -210.33
+01/22/2024 | GAS STATION | -48.20
+01/28/2024 | ONLINE TRANSFER | -500.00
+
+Ending Balance: 5,487.62

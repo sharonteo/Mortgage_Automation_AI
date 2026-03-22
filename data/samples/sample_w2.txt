@@ -1,3 +1,4 @@
+W-2 Wage and Tax Statement
 Employee Name: John Doe
 Employer: ACME Corp
 Wages: $85,000.00

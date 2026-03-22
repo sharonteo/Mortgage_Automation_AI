@@ -1,15 +1,19 @@
 Employee Name: John Doe
 Employer: Acme Manufacturing Inc.
+Tax Year: 2024
+
 Pay Period: 01/01/2024 - 01/15/2024
 Pay Date: 01/15/2024
 
-Gross Pay: 4,200.00
+Wages: 4200.00
+Gross Pay: 4200.00
+
 Federal Tax: 630.00
 State Tax: 210.00
 Social Security: 260.40
 Medicare: 60.90
 
-Net Pay: 3,038.70
+Net Pay: 3038.70
 
-YTD Gross: 4,200.00
-YTD Net: 3,038.70
+YTD Gross: 4200.00
+YTD Net: 3038.70

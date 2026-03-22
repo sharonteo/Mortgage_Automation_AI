@@ -78,9 +78,12 @@ Extract the following fields:
     elif doc_type == "paystub":
         schema = """
 Extract the following fields:
+- employee_name
 - employer
+- wages (numeric)
 - gross_pay (numeric)
 - net_pay (numeric)
+- tax_year
 """
     elif doc_type == "bank_statement":
         schema = """

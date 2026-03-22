@@ -1,106 +1,125 @@
 # Mortgage Automation AI  
-Lightweight Claude‑powered pipeline for extracting and summarizing mortgage income documents.
+A modular, end‑to‑end Claude‑powered document intelligence pipeline for mortgage underwriting workflows.
 
-This project demonstrates a clean, modular AI workflow for processing mortgage‑related documents. It ingests raw text, extracts key income fields using Claude, validates them, and produces a concise underwriter‑style summary. The design focuses on clarity, maintainability, and real‑world applicability for lending operations.
+This project uses Anthropic’s Claude LLM alongside traditional extraction and validation logic to automate the repetitive steps of reviewing W‑2s, paystubs, and bank statements. The system ingests documents, detects the document type, extracts structured fields, validates them with document‑specific rules, and generates a clean underwriting‑style summary grounded in structured data.
+
+The architecture is intentionally simple, modular, and production‑friendly — designed to scale to additional document types and integrate into real mortgage workflows
 
 ---
 
-## Pipeline Overview
+## 🚀 Features
 
+- **Document ingestion**  
+  Reads raw text from uploaded documents.
+
+- **Document type detection**  
+  Lightweight pattern‑based classifier for W‑2s, paystubs, and bank statements.
+
+- **Field extraction**  
+  Converts raw text into structured fields (income, employer, pay periods, YTD values, deposits, etc.).
+
+- **Validation engine**  
+  Document‑specific rules ensure required fields are present and consistent.
+
+- **LLM‑powered summary**  
+  Generates a clean, underwriting‑friendly summary grounded in structured fields.
+
+- **Simple entry script**  
+  Run the entire pipeline end‑to‑end with a single command.
+
+---
+
+## 🧠 Architecture Overview
+
+### **Pipeline Flow**
 ```
+
 ┌────────────┐     ┌────────────────────┐     ┌──────────────────┐     ┌────────────────────────┐
-│ Ingestion  │ --> │ Claude Extraction  │ --> │ Validation        │ --> │ Underwriter Summary    │
+│ Ingestion  │ --> │ Claude Extraction  │ --> │ Validation       │ --> │ Underwriter Summary    │
 └────────────┘     └────────────────────┘     └──────────────────┘     └────────────────────────┘
 ```
 
-- Ingestion loads a text document and normalizes it into a Document object.
-- Claude Extraction returns structured JSON fields such as employee name, employer, wages, and tax year.
-- Validation checks for missing or invalid values and ensures numeric fields are well‑formed.
-- Summary Generation uses Claude to produce a clear, professional narrative suitable for underwriting review.
+Each step is isolated, testable, and easy to extend.
 
 ---
 
-## Project Structure
+## 📁 Project Structure
+
 ```
 Mortgage_Automation_AI/
 │
-├── demo.py
-│
 ├── data/
 │   └── samples/
+│       ├── sample_bank_statement.txt
+│       ├── sample_paystub.txt
 │       └── sample_w2.txt
 │
-└── src/
-    └── mortgage_ai/
-        ├── __init__.py
-        ├── ingestion.py
-        ├── extraction.py
-        ├── validation.py
-        ├── summarization.py
-        └── pipeline.py
+├── src/
+│   └── mortgage_ai/
+│       ├── extraction.py
+│       ├── ingestion.py
+│       ├── pipeline.py
+│       ├── summarization.py
+│       ├── validation.py
+│       └── __init__.py
+│
+├── tests/
+│   ├── test_bank_statement_extraction.py
+│   └── test_paystub_extraction.py
+│
+├── demo.py
+├── claude_test.py
+└── README.md
+```
+---
+
+## 🏃‍♀️ How to Run
+
+From the project root:
+
+```bash
+python demo.py data/samples/sample_paystub.txt
 ```
 
-## Installation
+Or:
 
-Install dependencies:
+```bash
+python demo.py --file data/samples/sample_w2.txt
+```
 
-python -m pip install anthropic
+The script will:
 
-Set your Anthropic API key:
-
-setx ANTHROPIC_API_KEY "sk-ant-xxxxxxxx"
-
-(After setting the key, close and reopen your terminal.)
-
----
-
-## Running the Demo
-
-Run the end‑to‑end pipeline:
-
-python demo.py
-
-Expected output includes:
-
-- Extracted fields returned by Claude
-- Validation messages
-- A generated underwriter summary
+1. Ingest the document  
+2. Detect the document type  
+3. Extract structured fields  
+4. Validate required fields  
+5. Generate an underwriting‑style summary  
+6. Save the output to `output.txt`
 
 ---
 
-## Sample Input File
+## 🧩 Extensibility
 
-data/samples/sample_w2.txt
+The system is designed to scale:
 
-Employee Name: John Doe  
-Employer: ACME Corp  
-Wages: $85,000.00  
-Tax Year: 2024  
-
----
-
-## How It Works
-
-### Ingestion
-Loads a text file and wraps it in a Document object with a `.text` attribute used throughout the pipeline.
-
-### Claude Extraction
-Uses the Claude model to extract structured JSON fields. Missing fields are returned as null.
-
-### Validation
-Checks for required fields and ensures numeric values (such as wages) are valid and positive.
-
-### Summary Generation
-Sends extracted fields and validation issues to Claude to produce a concise, professional summary suitable for underwriting review.
+- Add new document types by creating a new extractor + validator  
+- Add new validation rules without touching extraction logic  
+- Swap in different LLMs or prompt templates  
+- Integrate into an LOS or workflow engine as a service  
 
 ---
 
-## Why This Project Matters
+## 🛠 Future Improvements
 
-Mortgage teams spend significant time manually reviewing income documents. This pipeline shows how AI can automate the first pass by:
+- Add automated tests for extraction + validation  
+- Add GitHub Actions for lightweight CI  
+- Support multi‑month bank statements  
+- Add anomaly detection for irregular deposits or income gaps  
+- Add PDF ingestion instead of plain text  
 
-- Extracting structured data  
-- Identifying missing or inconsistent values  
-- Generating a clear summary for underwriting  
+---
 
-The architecture demonstrates practical AI engineering skills: modular design, LLM integration, error‑tolerant validation, and clean orchestration.
+## 📬 Contact
+
+Built by Sharon Teo — Senior Data Scientist / ML Engineer.  
+Focused on modular, production‑ready AI systems for real workflows.

@@ -1,4 +1,6 @@
 # Mortgage Automation AI  
+
+[![gitcgr](https://gitcgr.com/badge/sharonteo/Mortgage_Automation_AI.svg)](https://gitcgr.com/sharonteo/Mortgage_Automation_AI)
 A modular, end‑to‑end Claude‑powered document intelligence pipeline for mortgage underwriting workflows.
 
 This project uses Anthropic’s Claude LLM alongside traditional extraction and validation logic to automate the repetitive steps of reviewing W‑2s, paystubs, and bank statements. The system ingests documents, detects the document type, extracts structured fields, validates them with document‑specific rules, and generates a clean underwriting‑style summary grounded in structured data.
